@@ -785,6 +785,13 @@ class Streamweasels_Admin {
         );
         // Error  Settings
         add_settings_field(
+            'swti_nonce_check',
+            'Nonce Check',
+            array($this, 'swti_nonce_check_cb'),
+            'swti_debug_fields',
+            'swti_debug_settings'
+        );
+        add_settings_field(
             'swti_debug',
             'Error Log',
             array($this, 'swti_debug_cb'),
@@ -1883,6 +1890,19 @@ class Streamweasels_Admin {
      * Debug Settings
      *
      */
+    public function swti_nonce_check_cb() {
+        $nonceCheck = ( isset( $this->options['swti_nonce_check'] ) ? $this->options['swti_nonce_check'] : '' );
+        ?>
+		
+		<input type="hidden" name="swti_options[swti_nonce_check]" value="0"/>
+		<input type="checkbox" id="sw-nonce-check" name="swti_options[swti_nonce_check]" value="1" <?php 
+        checked( 1, $nonceCheck, true );
+        ?> />
+		<p>Disable nonce checking, useful if page caching is breaking your Twitch Integration.</p>
+
+		<?php 
+    }
+
     public function swti_debug_cb() {
         $dismissForGood5 = ( isset( $this->options['swti_dismiss_for_good5'] ) ? $this->options['swti_dismiss_for_good5'] : 0 );
         ?>
@@ -2002,6 +2022,9 @@ class Streamweasels_Admin {
         if ( isset( $input['swti_layout'] ) ) {
             $new_input['swti_layout'] = sanitize_text_field( $input['swti_layout'] );
         }
+        if ( isset( $input['swti_nonce_check'] ) ) {
+            $new_input['swti_nonce_check'] = (int) $input['swti_nonce_check'];
+        }
         if ( isset( $input['swti_dismiss_for_good5'] ) ) {
             $new_input['swti_dismiss_for_good5'] = (int) $input['swti_dismiss_for_good5'];
         }
@@ -2109,7 +2132,7 @@ class Streamweasels_Admin {
             $premium_status = ( sti_fs()->can_use_premium_code__premium_only() ? 'free' : $status );
             $title = ( !empty( $section['title'] ) ? "<h3 class='hndle'><span class='dashicons {$icon}'></span>{$section['title']}</h3>" : '' );
             $description = ( $desc ? "<p>{$desc}</p>" : '' );
-            echo '<div class="postbox postbox-' . esc_attr( $section['title'] ) . ' postbox-' . esc_attr( $premium_status ) . '">';
+            echo '<div class="postbox postbox-' . esc_attr( str_replace( ' ', '-', strtolower( $section['title'] ) ) ) . ' postbox-' . esc_attr( $premium_status ) . '">';
             echo wp_kses( $title, $allowed_html );
             echo '<div class="inside">';
             echo wp_kses( $description, $allowed_html );

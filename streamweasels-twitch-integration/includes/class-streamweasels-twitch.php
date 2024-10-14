@@ -24,6 +24,7 @@ if ( ! class_exists( 'SWTI_Twitch_API' ) ) {
 		private $auth_token;
 		private $game;
 		private $token;
+		private $nonceCheck;
 		private $debug = false;
 
 		public function __construct() {
@@ -33,6 +34,7 @@ if ( ! class_exists( 'SWTI_Twitch_API' ) ) {
 			$this->auth_token = (!empty($options['swti_api_access_token'])) ? $options['swti_api_access_token'] : '';
 			$this->game = (!empty($options['swti_game'])) ? $options['swti_game'] : '';
 			$this->token = (!empty($options['swti_api_access_token'])) ? $options['swti_api_access_token'] : '';
+			$this->nonceCheck = (!empty($options['swti_nonce_check'])) ? $options['swti_nonce_check'] : false;
 		}
 
 		public function enable_debug_mode() {
@@ -262,8 +264,11 @@ if ( ! class_exists( 'SWTI_Twitch_API' ) ) {
 		public function swti_fetch_streams(WP_REST_Request $request) {
 
 			$nonce = $request->get_header('X-WP-Nonce');
-			if (!wp_verify_nonce($nonce, 'wp_rest')) {
-				return new WP_REST_Response('Nonce verification failed', 403);
+			
+			if (!$this->nonceCheck) {
+				if (!wp_verify_nonce($nonce, 'wp_rest')) {
+					return new WP_REST_Response('Nonce verification failed', 403);
+				}
 			}
 	
 			$authToken = $this->auth_token;
