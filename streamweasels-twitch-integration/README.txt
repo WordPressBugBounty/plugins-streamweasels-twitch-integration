@@ -3,7 +3,7 @@ Contributors: streamweasels, j.burleigh1, freemius
 Tags: twitch, twitch streams, twitch api, twitch embed, twitch blocks
 Requires at least: 5.0
 Tested up to: 6.6
-Stable tag: 1.8.6
+Stable tag: 1.8.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,14 @@ If you want to learn more about StreamWeasels Twitch Integration, check out thes
 8. Twitch Vods (included)
 
 == Changelog ==
+
+= 1.8.8 =
+* Default iframe width and height if not provided
+* Allow either true or 1 to be used for shortcode attributes
+
+= 1.8.7 =
+* Properly sanitize and escape all output from sw-twitch-embed shortcode
+* iframes within Twitch embeds are now 100% width and height
 
 = 1.8.6 =
 * updated freemius

@@ -204,22 +204,29 @@ class Streamweasels_Public {
     public function get_streamweasels_shortcode_embed( $args ) {
         // random 4-digit number is needed when multiple shortcodes on one page
         $uuid = rand( 1000, 9999 );
-        $host = ( isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '' );
-        $output = '';
-        $output .= '<div id="twitch-embed-' . esc_attr( $uuid ) . '" style="aspect-ratio:16/9"></div>';
+        $host = ( isset( $_SERVER['HTTP_HOST'] ) ? esc_js( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '' );
+        // Sanitize inputs and escape for HTML attributes or JS as appropriate
+        $width = ( !empty( $args['width'] ) ? esc_attr( sanitize_text_field( $args['width'] ) ) : '100%' );
+        $height = ( !empty( $args['height'] ) ? esc_attr( sanitize_text_field( $args['height'] ) ) : '100%' );
+        $embed_chat = esc_attr( sanitize_text_field( $args['embed-chat'] ?? 'video' ) );
+        // Treat autoplay and muted as boolean values, not text
+        $autoplay = ( !empty( $args['autoplay'] ) && ($args['autoplay'] === 'true' || $args['autoplay'] === '1') ? 'true' : 'false' );
+        $muted = ( !empty( $args['muted'] ) && ($args['muted'] === 'true' || $args['muted'] === '1') ? 'true' : 'false' );
+        $channel = esc_attr( sanitize_text_field( $args['channel'] ?? 'monstercat' ) );
+        $theme = esc_attr( sanitize_text_field( $args['theme'] ?? 'dark' ) );
+        $output = '<div id="sw-twitch-embed-' . esc_attr( $uuid ) . '" style="aspect-ratio:16/9"></div>';
         $output .= '<script type="text/javascript">
-		window.addEventListener("DOMContentLoaded", (event) => {';
-        $output .= 'new Twitch.Embed("twitch-embed-' . esc_attr( $uuid ) . '", {';
-        // Provide default values for missing key elements using the null coalescing operator
-        $output .= 'width: "' . (sanitize_text_field( $args['width'] ) ?? '100%') . '",';
-        $output .= 'height: "' . (sanitize_text_field( $args['height'] ) ?? '100%') . '",';
-        $output .= 'layout: "' . (sanitize_text_field( $args['embed-chat'] ) ?? 'video') . '",';
-        $output .= 'autoplay: ' . (sanitize_text_field( $args['autoplay'] ) ?? 'false') . ',';
-        $output .= 'muted: ' . (sanitize_text_field( $args['muted'] ) ?? 'false') . ',';
-        $output .= 'channel: "' . (sanitize_text_field( $args['channel'] ) ?? 'monstercat') . '",';
-        $output .= 'theme: "' . (sanitize_text_field( $args['theme'] ) ?? 'dark') . '",';
-        $output .= 'parent: ["' . $host . '"]';
-        $output .= '});
+		window.addEventListener("DOMContentLoaded", (event) => {
+			new Twitch.Embed("sw-twitch-embed-' . esc_js( $uuid ) . '", {
+				width: "' . $width . '",
+				height: "' . $height . '",
+				layout: "' . $embed_chat . '",
+				autoplay: ' . $autoplay . ',
+				muted: ' . $muted . ',
+				channel: "' . $channel . '",
+				theme: "' . $theme . '",
+				parent: ["' . esc_js( $host ) . '"]
+			});
 		});
 		</script>';
         return $output;
