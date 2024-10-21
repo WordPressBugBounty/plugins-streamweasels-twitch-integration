@@ -193,6 +193,19 @@ class Streamweasels_Public {
         ) ), 'before' );
     }
 
+    public function generate_fresh_nonce() {
+        $nonce = wp_create_nonce( 'wp_rest' );
+        wp_send_json_success( array(
+            'nonce' => $nonce,
+        ) );
+        wp_die();
+    }
+
+    public function register_ajax_handler() {
+        add_action( 'wp_ajax_get_fresh_nonce', array($this, 'generate_fresh_nonce') );
+        add_action( 'wp_ajax_nopriv_get_fresh_nonce', array($this, 'generate_fresh_nonce') );
+    }
+
     public function streamWeasels_shortcode() {
         // Setup the streamweasels shortcode
         add_shortcode( 'streamweasels', array($this, 'get_streamweasels_shortcode') );
@@ -379,7 +392,6 @@ class Streamweasels_Public {
             'translationsViewers'   => wp_kses_post( $translationsViewers ),
             'translationsStreaming' => wp_kses_post( $translationsStreaming ),
             'translationsFor'       => wp_kses_post( $translationsFor ),
-            'nonce'                 => wp_create_nonce( 'wp_rest' ),
         ) ) . ';', 'before' );
     }
 

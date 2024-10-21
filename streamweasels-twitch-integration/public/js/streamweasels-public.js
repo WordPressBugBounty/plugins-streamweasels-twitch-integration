@@ -68,6 +68,21 @@ streamWeasels.prototype = Object.create(null,{
             this._getStreams(this.channels,this.game,this.language);
         }
     },
+    _handleApiResponse: {
+        value: function(data, functionName) {
+            if (data.code === "rest_cookie_invalid_nonce") {
+                console.error(`${functionName} - nonce validation failed:`, data);
+                return false;
+            }
+            
+            if (!Array.isArray(data.data)) {
+                console.error(`${functionName} - unexpected data format:`, data);
+                return false;
+            }
+            
+            return true;
+        }
+    },   
     _getStreams:{
         value: function(channels, game, language, appendCount = 0, queryCount = 0, pagination = false){           
             // lets split the channels string into array chunks of 100
@@ -108,6 +123,11 @@ streamWeasels.prototype = Object.create(null,{
                     if (xhr[$i].readyState === 4) {
                         requestCount++;
                         var data = JSON.parse(xhr[$i].responseText)
+
+                        if (!this._handleApiResponse(data, '_getStreams')) {
+                            return;
+                        }
+
                         onlineStreams = onlineStreams.concat(data.data);
                         if (game && !channels) {
                             if (Object.keys(data.pagination).length > 0) {
@@ -184,6 +204,11 @@ streamWeasels.prototype = Object.create(null,{
                     if (xhrVods[$i].readyState === 4) {
                         requestCount++;
                         var data = JSON.parse(xhrVods[$i].responseText)
+
+                        if (!this._handleApiResponse(data, '_getVods')) {
+                            return;
+                        }
+
                         var vods = data.data;
                         vodsArray = vodsArray.concat(vods);
                         if (requestCount == (channelsArray.length)) {
@@ -362,6 +387,11 @@ streamWeasels.prototype = Object.create(null,{
                         if (xhr[$i].readyState === 4) {
                             requestCount++;
                             var data = JSON.parse(xhr[$i].responseText)
+
+                            if (!this._handleApiResponse(data, '_getOfflineStreams')) {
+                                return;
+                            }
+
                             offlineStreams = offlineStreams.concat(data.data);
                             if (requestCount == (offlineChannelsChunks.length)) {
                                 this._appendStreams(onlineStreams,offlineStreams)
@@ -1044,6 +1074,11 @@ streamWeasels.prototype = Object.create(null,{
             xhr[randomGameVal].onreadystatechange = function () {
                 if (xhr[randomGameVal].readyState === 4) {
                     var data = JSON.parse(xhr[randomGameVal].responseText)
+
+                    if (!this._handleApiResponse(data, '_getGameName')) {
+                        return;
+                    }
+
                     this._setGameName(data.data)
                 }
             }.bind(this)
@@ -1266,6 +1301,29 @@ streamWeasels.prototype = Object.create(null,{
     }
 })
 
+function fetchFreshNonce() {
+    return fetch(streamWeaselsVars.ajaxUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'action=get_fresh_nonce'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('fetchFreshNonce() failed');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success && data.data && data.data.nonce) {
+            return data.data.nonce;
+        } else {
+            throw new Error('fetchFreshNonce() success - data not valid: ' + JSON.stringify(data));
+        }
+    });
+}
+
 var streamWeaselsNodes = document.querySelectorAll('.cp-streamweasels');
 var navChannelCount = 0;
 var navTeamCount = 0;
@@ -1286,7 +1344,9 @@ streamWeaselsNodes.forEach(function(item, index, array) {
             }
         }        
     }
-    var streamWeaselsVarUuid = eval('streamWeaselsVars'+uuid);
+
+fetchFreshNonce().then(function(freshNonce) {
+    var streamWeaselsVarUuid = eval('streamWeaselsVars' + uuid);
     var streamWeaselsInit = new streamWeasels({
         uuid: uuid,
         gameName: streamWeaselsVarUuid.gameName,
@@ -1331,11 +1391,16 @@ streamWeaselsNodes.forEach(function(item, index, array) {
         translationsViewers: streamWeaselsVarUuid.translationsViewers,
         translationsStreaming: streamWeaselsVarUuid.translationsStreaming,        
         translationsFor: streamWeaselsVarUuid.translationsFor,
-        nonce: streamWeaselsVarUuid.nonce,
-    })
+        nonce: freshNonce
+    });
+
     if (streamWeaselsVarUuid.layout == 'wall' && streamWeaselsVarUuid.refresh == '1') {
         setInterval(function() {
             streamWeaselsInit._refresh();
         }, 60000);
     }
+}).catch(function(error) {
+    console.error('Error fetching nonce:', error);
+});
+
 })
