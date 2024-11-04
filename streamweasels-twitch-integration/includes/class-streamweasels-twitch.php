@@ -323,6 +323,8 @@ if ( ! class_exists( 'SWTI_Twitch_API' ) ) {
 
 		public function swti_fetch_video(WP_REST_Request $request) {
 
+			$nonce = $request->get_header('X-WP-Nonce');
+
 			if (!$this->nonceCheck) {
 				if (!wp_verify_nonce($nonce, 'wp_rest')) {
 					$this->swti_twitch_debug_field('Nonce verification failed - Fetch Video. Nonce: ' . ($nonce ? $nonce : 'empty'));
@@ -372,6 +374,8 @@ if ( ! class_exists( 'SWTI_Twitch_API' ) ) {
 		
 		function swti_fetch_users(WP_REST_Request $request) {
 
+			$nonce = $request->get_header('X-WP-Nonce');
+
 			if (!$this->nonceCheck) {
 				if (!wp_verify_nonce($nonce, 'wp_rest')) {
 					$this->swti_twitch_debug_field('Nonce verification failed - Fetch Users. Nonce: ' . ($nonce ? $nonce : 'empty'));
@@ -414,6 +418,8 @@ if ( ! class_exists( 'SWTI_Twitch_API' ) ) {
 		}		
 
 		function swti_fetch_games(WP_REST_Request $request) {
+
+			$nonce = $request->get_header('X-WP-Nonce');
 
 			if (!$this->nonceCheck) {
 				if (!wp_verify_nonce($nonce, 'wp_rest')) {
