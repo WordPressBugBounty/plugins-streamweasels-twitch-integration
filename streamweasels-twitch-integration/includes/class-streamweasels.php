@@ -206,35 +206,35 @@ class Streamweasels {
         $rail_data = $wall_data = $player_data = $status_data = $vods_data = $feature_data = $showcase_data = $nav_data = false;
         if ( in_array( $rail_path, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             $rail_active = true;
-            $rail_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $rail_path );
+            $rail_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $rail_path, true, false );
         }
         if ( in_array( $wall_path, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             $wall_active = true;
-            $wall_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $wall_path );
+            $wall_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $wall_path, true, false );
         }
         if ( in_array( $player_path, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             $player_active = true;
-            $player_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $player_path );
+            $player_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $player_path, true, false );
         }
         if ( in_array( $status_path, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             $status_active = true;
-            $status_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $status_path );
+            $status_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $status_path, true, false );
         }
         if ( in_array( $vods_path, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             $vods_active = true;
-            $vods_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $vods_path );
+            $vods_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $vods_path, true, false );
         }
         if ( in_array( $feature_path, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             $feature_active = true;
-            $feature_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $feature_path );
+            $feature_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $feature_path, true, false );
         }
         if ( in_array( $showcase_path, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             $showcase_active = true;
-            $showcase_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $showcase_path );
+            $showcase_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $showcase_path, true, false );
         }
         if ( in_array( $nav_path, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             $nav_active = true;
-            $nav_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $nav_path );
+            $nav_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $nav_path, true, false );
         }
         $player_data_version = ( $player_data ? $player_data['Version'] : false );
         $wall_data_version = ( $wall_data ? $wall_data['Version'] : false );
