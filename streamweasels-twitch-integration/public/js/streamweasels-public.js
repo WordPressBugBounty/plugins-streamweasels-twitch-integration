@@ -1346,6 +1346,11 @@ streamWeaselsNodes.forEach(function(item, index, array) {
     }
 
 fetchFreshNonce().then(function(freshNonce) {
+    // Ensure uuid is valid, bail out if not
+    if (!/^\d+$/.test(uuid)) {
+        console.error('Invalid UUID:', uuid);
+        return;
+    }
     var streamWeaselsVarUuid = eval('streamWeaselsVars' + uuid);
     var streamWeaselsInit = new streamWeasels({
         uuid: uuid,

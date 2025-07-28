@@ -3,7 +3,7 @@ Contributors: streamweasels, j.burleigh1, freemius
 Tags: twitch, twitch streams, twitch api, twitch embed, twitch blocks
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.9.3
+Stable tag: 1.9.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,8 +125,12 @@ If you want to learn more about StreamWeasels Twitch Integration, check out thes
 
 == Changelog ==
 
+= 1.9.4 =
+* updated freemius
+* security fix for invalid UUIDs
+
 = 1.9.3 =
-* Updated freemius
+* updated freemius
 
 = 1.9.2 =
 * Updated freemius

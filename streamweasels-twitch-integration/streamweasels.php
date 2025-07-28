@@ -16,7 +16,7 @@
  * Plugin Name:       SW Twitch Integration - Blocks and Shortcodes for Embedding Twitch Streams
  * Plugin URI:        https://www.streamweasels.com/
  * Description:       Embed Twitch streams with our collection of Twitch Blocks and Shortcodes.
- * Version:           1.9.3
+ * Version:           1.9.4
  * Author:            StreamWeasels
  * Author URI:        https://www.streamweasels.com
  * License:           GPL-2.0+
@@ -33,7 +33,7 @@ if ( !defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'STREAMWEASELS_VERSION', '1.9.3' );
+define( 'STREAMWEASELS_VERSION', '1.9.4' );
 if ( function_exists( 'sti_fs' ) ) {
     sti_fs()->set_basename( false, __FILE__ );
 } else {
@@ -72,6 +72,8 @@ if ( function_exists( 'sti_fs' ) ) {
 
         // Init Freemius.
         sti_fs();
+        // Disable monthly breakdown in pricing — show annual figure only.
+        sti_fs()->add_filter( 'pricing/show_annual_in_monthly', '__return_false' );
         // Signal that SDK was initiated.
         do_action( 'sti_fs_loaded' );
     }
