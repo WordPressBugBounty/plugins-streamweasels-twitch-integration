@@ -16,7 +16,7 @@
  * Plugin Name:       SW Twitch Integration - Blocks and Shortcodes for Embedding Twitch Streams
  * Plugin URI:        https://www.streamweasels.com/
  * Description:       Embed Twitch streams with our collection of Twitch Blocks and Shortcodes.
- * Version:           1.9.4
+ * Version:           1.9.5
  * Author:            StreamWeasels
  * Author URI:        https://www.streamweasels.com
  * License:           GPL-2.0+
@@ -33,7 +33,7 @@ if ( !defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'STREAMWEASELS_VERSION', '1.9.4' );
+define( 'STREAMWEASELS_VERSION', '1.9.5' );
 if ( function_exists( 'sti_fs' ) ) {
     sti_fs()->set_basename( false, __FILE__ );
 } else {
@@ -46,25 +46,26 @@ if ( function_exists( 'sti_fs' ) ) {
                 // Include Freemius SDK.
                 require_once dirname( __FILE__ ) . '/freemius/start.php';
                 $sti_fs = fs_dynamic_init( array(
-                    'id'             => '9086',
-                    'slug'           => 'streamweasels-twitch-integration',
-                    'premium_slug'   => 'streamweasels-twitch-integration-pro',
-                    'type'           => 'plugin',
-                    'public_key'     => 'pk_a06ba378682cf2b3168ab5462b900',
-                    'is_premium'     => false,
-                    'premium_suffix' => 'Pro',
-                    'has_addons'     => true,
-                    'has_paid_plans' => true,
-                    'trial'          => array(
+                    'id'               => '9086',
+                    'slug'             => 'streamweasels-twitch-integration',
+                    'premium_slug'     => 'streamweasels-twitch-integration-pro',
+                    'type'             => 'plugin',
+                    'public_key'       => 'pk_a06ba378682cf2b3168ab5462b900',
+                    'is_premium'       => false,
+                    'premium_suffix'   => 'Pro',
+                    'has_addons'       => true,
+                    'has_paid_plans'   => true,
+                    'trial'            => array(
                         'days'               => 10,
                         'is_require_payment' => true,
                     ),
-                    'menu'           => array(
+                    'menu'             => array(
                         'slug'    => 'streamweasels',
                         'support' => false,
                         'addons'  => false,
                     ),
-                    'is_live'        => true,
+                    'is_live'          => true,
+                    'is_org_compliant' => true,
                 ) );
             }
             return $sti_fs;
